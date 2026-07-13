@@ -44,11 +44,12 @@ typedef struct {
 #define GPIO_PIN_NO_15		15
 
 //GPIO modes
+//1. Non interrupt modes
 #define GPIO_MODE_IN		0
 #define GPIO_MODE_OUT 		1
 #define GPIO_MODE_ALTFN 	2
 #define GPIO_MODE_ANALOG 	3
-
+//2. Interrupt modes
 #define GPIO_MODE_IT_FT		4 //Input falling edge
 #define GPIO_MODE_IT_RT		5 //Rising edge
 #define GPIO_MODE_IT_RFT	6 //Rising edge falling edge

@@ -63,6 +63,7 @@
 /*Base address of peripherals hanging on APB2 bus */
 
 #define EXTI_BASE_ADDRESS		(APB2_PERIPHERAL_BASE + 0x3C00)
+#define SYSCFG_BASE_ADDRESS		(APB2_PERIPHERAL_BASE + 0X3800)
 
 #define USART1_BASE_ADDRESS		(APB2_PERIPHERAL_BASE + 0x1000)
 #define USART6_BASE_ADDRESS		(APB2_PERIPHERAL_BASE + 0x1400)
@@ -125,6 +126,29 @@ typedef struct
 
 }RCC_RegDef_t;
 
+//EXTI Register structure
+typedef struct
+{
+    volatile uint32_t IMR;    /*!< Interrupt Mask Register - Enables/disables interrupt requests for EXTI lines */
+    volatile uint32_t EMR;    /*!< Event Mask Register - Enables/disables event generation for EXTI lines */
+    volatile uint32_t RTSR;   /*!< Rising Trigger Selection Register - Selects rising-edge detection */
+    volatile uint32_t FTSR;   /*!< Falling Trigger Selection Register - Selects falling-edge detection */
+    volatile uint32_t SWIER;  /*!< Software Interrupt Event Register - Generates interrupt/event by software */
+    volatile uint32_t PR;     /*!< Pending Register - Indicates and clears pending interrupt flags */
+} EXTI_RegDef_t;
+
+typedef struct
+{
+	volatile uint32_t MEMRMP;
+	volatile uint32_t PMC;
+	volatile uint32_t EXTICR[4];
+    uint32_t RESERVED2[2];
+	volatile uint32_t CMPCR;
+	uint32_t RESERVED1[2];
+	volatile uint32_t CFGR;
+
+}SYSCFG_RegDef_t;
+
 /******** Peripheral base addresses type-casted to xxx_RegDef_t *************/
 #define GPIOA ((GPIO_RegDef_t*)GPIOA_BASE_ADDRESS)
 #define GPIOB ((GPIO_RegDef_t*)GPIOB_BASE_ADDRESS)
@@ -137,6 +161,8 @@ typedef struct
 #define GPIOI ((GPIO_RegDef_t*)GPIOI_BASE_ADDRESS)
 
 #define RCC ((RCC_RegDef_t*)RCC_BASE_ADDRESS)
+#define SYSCFG ((SYSCFG_RegDef_t*)SYSCFG_BASE_ADDRESS)
+#define EXTI ((EXTI_RegDef_t*)EXTI_BASE_ADDRESS)
 
 //Clock enable Macro for GPIOx peripheral
 #define GPIOA_PERI_CLK_EN()		RCC->AHB1ENR |= (1 << 0)
@@ -163,8 +189,8 @@ typedef struct
 #define USART1_PCLK_EN()		RCC->APB2ENR |= (1 << 4)
 #define USART2_PCLK_EN()		RCC->APB1ENR |= (1 << 17)
 #define USART3_PCLK_EN()		RCC->APB1ENR |= (1 << 18)
-#define UART4_PCLK_EN()		RCC->APB1ENR |= (1 << 19)
-#define UART5_PCLK_EN()		RCC->APB1ENR |= (1 << 20)
+#define UART4_PCLK_EN()			RCC->APB1ENR |= (1 << 19)
+#define UART5_PCLK_EN()			RCC->APB1ENR |= (1 << 20)
 #define USART6_PCLK_EN()		RCC->APB2ENR |= (1 << 5)
 
 //Clock enable macro for SYSCFG peripheral
@@ -206,6 +232,15 @@ typedef struct
 #define GPIOG_REG_RESET()		do{ (RCC->AHB1RSTR |= (1 << 6));	(RCC->AHB1RSTR &= ~(1 << 6)); }while(0)
 #define GPIOH_REG_RESET()		do{ (RCC->AHB1RSTR |= (1 << 7));	(RCC->AHB1RSTR &= ~(1 << 7)); }while(0)
 #define GPIOI_REG_RESET()		do{ (RCC->AHB1RSTR |= (1 << 8));	(RCC->AHB1RSTR &= ~(1 << 8)); }while(0)
+
+#define GPIO_BASE_ADDRESS_TO_CODE(x)    ((x == GPIOA)?0:\
+                                        (x == GPIOB)?1:\
+                                        (x == GPIOC)?2:\
+                                        (x == GPIOB)?3:\
+                                        (x == GPIOA)?4:\
+                                        (x == GPIOB)?5:\
+                                        (x == GPIOA)?6:\
+                                        (x == GPIOB)?7:0 )
 
 //Some generic macros
 #define ENABLE 1

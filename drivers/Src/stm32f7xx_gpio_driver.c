@@ -98,6 +98,17 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 {
 	uint32_t temp = 0; // temp = temporary
 
+	/* Why GPIO modes are divided into non interrupt and interrupt modes?
+	 *
+	 * INPUT, OUTPUT, ANALOG, and ALTERNATE FUNCTION only define how the GPIO pin
+	 * behaves (read, drive, analog, or peripheral function). They do not notify
+	 * the CPU when the pin changes state. Thus non interrupt.
+	 *
+	 * Rising/Falling edge modes additionally connect the pin to the EXTI controller,
+	 * which detects voltage transitions and generates an interrupt, allowing the
+	 * CPU to execute the corresponding ISR automatically. Thus interrupt
+	 */
+
 	//1. Configure GPIO pin mode
 	if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_ANALOG_MODE)
 	{
@@ -118,6 +129,39 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 	else
 	{
 		//interrupt mode
+		//GPIO Pin Interrupt configuration
+		//EXTI0 is meant for PinNumber 0 of any port we select (PA0, PB0, PC0 etc) and such like total 16 EXTI lines as total 16 pins per port.
+		//Once a specific Port's Pin is selected and routed to EXTI line, no other same pin number of any other port can generate interrupt simultaneously.
+		//1. Pin must be in input mode (as the whole thing is about receiving an interrupt
+		if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_FT)
+		{
+			//configure FTSR
+			EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			//clear corresponding RTSR bit to avoid potential conflicts
+			EXTI->RTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		}
+		else if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RT)
+		{
+			//configure RTSR
+			EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			//clear corresponding FTSR bit to avoid potential conflicts
+			EXTI->FTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		}
+		else if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RFT)
+		{
+			//configure both FTSR and RTSR
+			EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
+		}
+		//2. Configure the GPIO port selection in SYSCFG_EXTICR
+		uint8_t temp1 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber/4;
+		uint8_t temp2 =  pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber % 4;
+		uint8_t portcode = GPIO_BASE_ADDRESS_TO_CODE(pGPIOHandle->pGPIOx);
+		SYSCFG_PCLK_EN();
+		SYSCFG->EXTICR[temp1] = portcode << ( temp2*4);
+
+		//3. Enable the EXTI interrupt delivery using IMR
+		EXTI->IMR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 	}
 	temp = 0;
 
