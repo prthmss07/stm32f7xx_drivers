@@ -278,9 +278,72 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 	pGPIOx->ODR ^= (1 << PinNumber);
 }
 
+/*
+ * After the EXTI controller generates an Interrupt Request (IRQ), it is
+ * forwarded to the Nested Vectored Interrupt Controller (NVIC). This function
+ * configures the NVIC by enabling/disabling the corresponding IRQ using the
+ * ISER/ICER registers and assigning its priority. Once enabled, the NVIC can
+ * forward the IRQ to the CPU, allowing execution of the corresponding ISR.
+ */
+void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t EnorDi)
+{
+	if(EnorDie == ENABLE)
+	{
+		if(IRQ_Number <= 31)
+		{
+			//program ISER0 register
+			*ISER0 |= (1 << IRQ_Number);
+		}
+		else if(IRQ_Number > 31 && IQR_Number < 64)
+		{
+			//program ISER1 register
+			*ISER1 |= (1 << IRQ_Number % 32);
+		}
+		else if(IQR_Number >= 64 && IQR_Number <= 96)
+		{
+			//program ISER2 register
+			*ISER2 |= (1 << IRQ_Number % 64);
+		}
+	}
+	else
+	{
+		if(IRQ_Number <= 31)
+		{
+			//program ICER0 register
+			*ICER0 |= (1 << IRQ_Number);
+		}
+		else if(IRQ_Number > 31 && IQR_Number < 64)
+		{
+			//program ICER1 register
+			*ICER1 |= (1 << IRQ_Number % 32);
+		}
+		else if(IQR_Number >= 64 && IQR_Number <= 96)
+		{
+			//program ICER2 register
+			*ICER2 |= (1 << IRQ_Number % 64);
+		}
+	}
+}
+
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority)
+{
+	//Find out the ipr register based on IRQNumber
+	uint32_t iprx = IRQNumber /4;
+	uint32_t iprx_section = IRQNumber %4;
+	uint8_t shift_amount = (8 * iprx_section) - (8 - NO_PR_BITS_IMPLEMENTED);
+	*(NVIC_PR_BASE_ADDRESS +iprx ) |= (IRQPriority << shift_amount);
+}
 
 
-
+void GPIO_IRQHandler(uint8_t PinNumber)
+{
+	//clear the exti pr register  corresponding to the Pin number
+	if(EXTI->PR & (1 << PinNumber))//if PIR is 1 then AND with 1 gives 1 which makes the statement true and the following executes
+	{
+		//clear
+		EXTI->PR |= (1 << PinNumber);
+	}
+}
 
 
 

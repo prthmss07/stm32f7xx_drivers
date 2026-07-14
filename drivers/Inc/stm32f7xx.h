@@ -10,6 +10,24 @@
 
 #include<stdint.h>
 
+/* ARM Cortx-M7 NVIC ISER Register Addresses*/
+
+#define NVIC_ISER0 ((volatile uint32_t*)0xE000E100)
+#define NVIC_ISER1 ((volatile uint32_t*)0xE000E104)
+#define NVIC_ISER2 ((volatile uint32_t*)0xE000E108)
+#define NVIC_ISER3 ((volatile uint32_t*)0xE000E10C)
+
+/*ARM Cortex-M7 NVIC ISER Register Addresses*/
+
+#define NVIC_ICER0 ((volatile uint32_t*)0XE000E180)
+#define NVIC_ICER1 ((volatile uint32_t*)0XE000E184)
+#define NVIC_ICER2 ((volatile uint32_t*)0XE000E188)
+#define NVIC_ICER3 ((volatile uint32_t*)0XE000E18C)
+
+/*NVIC Priority Register Base Address*/
+#define NVIC_PR_BASE_ADDRESS ((volatile uint32_t*)0XE000E400)
+
+#define NO_PR_BITS_IMPLEMENTED		4
 //refer stm32f7xx reference manual for these addresses
 /*We target the following peripherals :
  *GPIOA, GPIOB, ... GPIOI,
@@ -241,6 +259,14 @@ typedef struct
                                         (x == GPIOB)?5:\
                                         (x == GPIOA)?6:\
                                         (x == GPIOB)?7:0 )
+#define IQR_NO_EXTI0		6
+#define IQR_NO_EXTI1		7
+#define IQR_NO_EXTI2		8
+#define IQR_NO_EXTI3		9
+#define IQR_NO_EXTI4		10
+#define IQR_NO_EXTI9_5		23
+#define IQR_NO_EXTI15_10	40
+
 
 //Some generic macros
 #define ENABLE 1
