@@ -810,26 +810,26 @@ LOAD C:/ST/STM32CubeIDE_2.1.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_rnglists
                 0x00000013       0x19 ./Startup/startup_stm32f722zetx.o
 
-.debug_macro    0x00000000     0x1390
- .debug_macro   0x00000000       0x8a ./Src/Assign1.o
- .debug_macro   0x0000008a      0xade ./Src/Assign1.o
- .debug_macro   0x00000b68       0x22 ./Src/Assign1.o
- .debug_macro   0x00000b8a       0x8e ./Src/Assign1.o
- .debug_macro   0x00000c18       0x51 ./Src/Assign1.o
- .debug_macro   0x00000c69      0x103 ./Src/Assign1.o
- .debug_macro   0x00000d6c       0x6a ./Src/Assign1.o
- .debug_macro   0x00000dd6      0x1df ./Src/Assign1.o
- .debug_macro   0x00000fb5      0x317 ./Src/Assign1.o
- .debug_macro   0x000012cc       0xc4 ./Src/Assign1.o
+.debug_macro    0x00000000     0x13c5
+ .debug_macro   0x00000000       0x95 ./Src/Assign1.o
+ .debug_macro   0x00000095      0xade ./Src/Assign1.o
+ .debug_macro   0x00000b73       0x22 ./Src/Assign1.o
+ .debug_macro   0x00000b95       0x8e ./Src/Assign1.o
+ .debug_macro   0x00000c23       0x51 ./Src/Assign1.o
+ .debug_macro   0x00000c74      0x103 ./Src/Assign1.o
+ .debug_macro   0x00000d77       0x6a ./Src/Assign1.o
+ .debug_macro   0x00000de1      0x1df ./Src/Assign1.o
+ .debug_macro   0x00000fc0      0x341 ./Src/Assign1.o
+ .debug_macro   0x00001301       0xc4 ./Src/Assign1.o
 
-.debug_line     0x00000000      0x514
- .debug_line    0x00000000      0x499 ./Src/Assign1.o
- .debug_line    0x00000499       0x7b ./Startup/startup_stm32f722zetx.o
+.debug_line     0x00000000      0x52e
+ .debug_line    0x00000000      0x4b3 ./Src/Assign1.o
+ .debug_line    0x000004b3       0x7b ./Startup/startup_stm32f722zetx.o
 
-.debug_str      0x00000000     0x54e1
- .debug_str     0x00000000     0x54e1 ./Src/Assign1.o
-                               0x560e (size before relaxing)
- .debug_str     0x000054e1       0x88 ./Startup/startup_stm32f722zetx.o
+.debug_str      0x00000000     0x55ed
+ .debug_str     0x00000000     0x55ed ./Src/Assign1.o
+                               0x571a (size before relaxing)
+ .debug_str     0x000055ed       0x88 ./Startup/startup_stm32f722zetx.o
 
 .comment        0x00000000       0x43
  .comment       0x00000000       0x43 ./Src/Assign1.o

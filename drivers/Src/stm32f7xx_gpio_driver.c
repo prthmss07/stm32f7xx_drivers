@@ -16,74 +16,74 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi)
 		{
 			GPIOA_PERI_CLK_EN();
 		}
-		elseif(pGPIOx == GPIOB);
+		else if(pGPIOx == GPIOB)
 		{
 			GPIOB_PERI_CLK_EN();
 		}
-		elseif(pGPIOx == GPIOC);
+		else if(pGPIOx == GPIOC)
 		{
 			GPIOC_PERI_CLK_EN();
 		}
-		elseif(pGPIOx == GPIOD);
+		else if(pGPIOx == GPIOD)
 		{
 			GPIOD_PERI_CLK_EN();
 		}
-		elseif(pGPIOx == GPIOE);
+		else if(pGPIOx == GPIOE)
 		{
 			GPIOE_PERI_CLK_EN();
 		}
-		elseif(pGPIOx == GPIOF);
+		else if(pGPIOx == GPIOF)
 		{
 			GPIOF_PERI_CLK_EN();
 		}
-		elseif(pGPIOx == GPIOG);
+		else if(pGPIOx == GPIOG)
 		{
 			GPIOG_PERI_CLK_EN();
 		}
-		elseif(pGPIOx == GPIOH);
+		else if(pGPIOx == GPIOH)
 		{
 			GPIOH_PERI_CLK_EN();
 		}
-		elseif(pGPIOx == GPIOI);
+		else if(pGPIOx == GPIOI)
 		{
 			GPIOI_PERI_CLK_EN();
 		}
 	}
-	elseif(EnorDi == DISABLE)
+	else if(EnorDi == DISABLE)
 	{
 		if(pGPIOx == GPIOA)
 		{
 			GPIOA_PERI_CLK_DI();
 		}
-		elseif(pGPIOx == GPIOB)
+		else if(pGPIOx == GPIOB)
 		{
 			GPIOB_PERI_CLK_DI();
 		}
-		elseif(pGPIOx == GPIOC)
+		else if(pGPIOx == GPIOC)
 		{
 			GPIOC_PERI_CLK_DI();
 		}
-		elseif(pGPIOx == GPIOD)
+		else if(pGPIOx == GPIOD)
 		{
 			GPIOD_PERI_CLK_DI();
 		}
-		elseif(pGPIOx == GPIOE)
+		else if(pGPIOx == GPIOE)
 		{
 			GPIOE_PERI_CLK_DI();
 		}
-		elseif(pGPIOx == GPIOF)
+		else if(pGPIOx == GPIOF)
 		{
 			GPIOF_PERI_CLK_DI();
 		}
-		elseif(pGPIOx == GPIOG)
+		else if(pGPIOx == GPIOG)
 		{
 			GPIOG_PERI_CLK_DI();
 		}
-		elseif(pGPIOx == GPIOH)
+		else if(pGPIOx == GPIOH)
 		{
 			GPIOH_PERI_CLK_DI();
 		}
-		elseif(pGPIOx == GPIOI)
+		else if(pGPIOx == GPIOI)
 		{
 			GPIOI_PERI_CLK_DI();
 		}
@@ -207,35 +207,35 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIOx)
 	{
 		GPIOA_REG_RESET();
 	}
-	elseif(pGPIOx == GPIOB);
+	else if(pGPIOx == GPIOB)
 	{
 		GPIOB_REG_RESET();
 	}
-	elseif(pGPIOx == GPIOC);
+	else if(pGPIOx == GPIOC)
 	{
 		GPIOC_REG_RESET();
 	}
-	elseif(pGPIOx == GPIOD);
+	else if(pGPIOx == GPIOD)
 	{
 		GPIOD_REG_RESET();
 	}
-	elseif(pGPIOx == GPIOE);
+	else if(pGPIOx == GPIOE)
 	{
 		GPIOE_REG_RESET();
 	}
-	elseif(pGPIOx == GPIOF);
+	else if(pGPIOx == GPIOF)
 	{
 		GPIOF_REG_RESET();
 	}
-	elseif(pGPIOx == GPIOG);
+	else if(pGPIOx == GPIOG)
 	{
 		GPIOG_REG_RESET();
 	}
-	elseif(pGPIOx == GPIOH);
+	else if(pGPIOx == GPIOH)
 	{
 		GPIOH_REG_RESET();
 	}
-	elseif(pGPIOx == GPIOI);
+	else if(pGPIOx == GPIOI)
 	{
 		GPIOI_REG_RESET();
 	}

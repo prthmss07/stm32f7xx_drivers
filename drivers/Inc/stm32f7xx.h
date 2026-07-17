@@ -106,6 +106,20 @@ typedef struct
 	volatile uint32_t AFR[2];
 }GPIO_RegDef_t;
 
+typedef struct
+{
+	volatile uint32_t CR1;
+	volatile uint32_t CR2;
+	volatile uint32_t SR;
+	volatile uint32_t DR;
+	volatile uint32_t CRCPR;
+	volatile uint32_t RXCRCR;
+	volatile uint32_t TXCRCR;
+	volatile uint32_t I2SCFGR;
+	volatile uint32_t I2SPR;
+
+}SPI_RegDef_t;
+
 //RCC peripheral register structure
 typedef struct
 {
@@ -202,6 +216,8 @@ typedef struct
 #define SPI1_PCLK_EN()		RCC->APB2ENR |= (1 << 12)
 #define SPI2_PCLK_EN()		RCC->APB1ENR |= (1 << 14)
 #define SPI3_PCLK_EN()		RCC->APB1ENR |= (1 << 15)
+#define SPI4_PCLK_EN()		RCC->APB2ENR |= (1 << 13)
+
 
 //Clock enable macro for USARTx peripheral
 #define USART1_PCLK_EN()		RCC->APB2ENR |= (1 << 4)
@@ -234,6 +250,7 @@ typedef struct
 #define SPI1_PCLK_DI()		RCC->APB2ENR &= ~(1 << 12)
 #define SPI2_PCLK_DI()		RCC->APB1ENR &= ~(1 << 14)
 #define SPI3_PCLK_DI()		RCC->APB1ENR &= ~(1 << 15)
+#define SPI4_PCLK_DI()		RCC->APB2ENR &= ~(1 << 13)
 
 //clock disable macro for SYSCFG peripheral
 #define SYSCFG_PCLK_DI()		RCC->APB2ENR &= ~(1 << 14)
@@ -251,6 +268,12 @@ typedef struct
 #define GPIOH_REG_RESET()		do{ (RCC->AHB1RSTR |= (1 << 7));	(RCC->AHB1RSTR &= ~(1 << 7)); }while(0)
 #define GPIOI_REG_RESET()		do{ (RCC->AHB1RSTR |= (1 << 8));	(RCC->AHB1RSTR &= ~(1 << 8)); }while(0)
 
+#define SPI1_REG_RESET()		do{ (RCC->APB2RSTR |= (1 << 12));	(RCC->APB2RSTR &= ~(1 << 12)); }while(0)
+#define SPI2_REG_RESET()		do{ (RCC->APB1RSTR |= (1 << 14));	(RCC->APB1RSTR &= ~(1 << 14)); }while(0)
+#define SPI3_REG_RESET()		do{ (RCC->APB1RSTR |= (1 << 15));	(RCC->APB1RSTR &= ~(1 << 15)); }while(0)
+#define SPI4_REG_RESET()		do{ (RCC->AHB2RSTR |= (1 << 13));	(RCC->AHB1RSTR &= ~(1 << 13)); }while(0)
+
+
 #define GPIO_BASE_ADDRESS_TO_CODE(x)    ((x == GPIOA)?0:\
                                         (x == GPIOB)?1:\
                                         (x == GPIOC)?2:\
@@ -267,6 +290,13 @@ typedef struct
 #define IQR_NO_EXTI9_5		23
 #define IQR_NO_EXTI15_10	40
 
+#define SPI1	((SPI_RegDef_t*)SPI1_BASE_ADDRESS)
+#define SPI2	((SPI_RegDef_t*)SPI2_BASE_ADDRESS)
+#define SPI3	((SPI_RegDef_t*)SPI3_BASE_ADDRESS)
+#define SPI4	((SPI_RegDef_t*)SPI4_BASE_ADDRESS)
+
+
+
 
 //Some generic macros
 #define ENABLE 1
@@ -281,6 +311,7 @@ typedef struct
 
 
 #include "stm32f7xx_gpio_driver.h"
+#include "stm32f7xx_spi_driver.h"
 
 
 
