@@ -10,14 +10,20 @@
 
 #include "stm32f7xx.h"
 
+
 typedef struct {
-    uint8_t SPI_DeviceMode;   // Master or Slave (Controls MSTR bit)
-    uint8_t SPI_BusConfig;    // Full-Duplex, Half-Duplex, or Simplex (Rx Only)
-    uint8_t SPI_SclkSpeed;         // Baud Rate Prescaler (/2, /4, /8, etc.)
-    uint8_t SPI_DFF;          // 8-bit or 16-bit data frame format
-    uint8_t SPI_CPOL;         // Clock Polarity (Idle Low or Idle High)
-    uint8_t SPI_CPHA;         // Clock Phase (First edge or Second edge)
-    uint8_t SPI_SSM;          // Software Slave Management (Enable/Disable)
+    uint8_t SPI_DeviceMode;   /* Controls MSTR bit (Bit 2) -> Sets Master or Slave role */
+    uint8_t SPI_BusConfig;    /* Controls BIDIMODE (Bit 15), BIDIOE (Bit 14), and RXONLY (Bit 10)
+                               * -> Sets Full-Duplex, Half-Duplex, or Receive-Only mode
+                               */
+    uint8_t SPI_SclkSpeed;    /* Controls BR[2:0] bits (Bits 5, 4, 3) -> Sets Baud Rate clock divider */
+    uint8_t SPI_DFF;          /* Controls CRCL bit (Bit 11) -> Sets 8-bit or 16-bit data length
+                               * (Note: Named 'DFF' on older STM32s, renamed 'CRCL' on newer ones)
+                               */
+    uint8_t SPI_CPOL;         // Controls CPOL bit (Bit 1) -> Sets Clock Polarity (Idle Low/High)
+    uint8_t SPI_CPHA;         // Controls CPHA bit (Bit 0) -> Sets Clock Phase (Sample Edge)
+    uint8_t SPI_SSM;          // Controls SSM bit (Bit 9) -> Turns Software Slave Management ON/OFF
+                              // (Your code will also toggle the companion SSI bit at Bit 8 based on this)
 } SPI_Config_t;
 
 typedef struct {
@@ -27,14 +33,42 @@ typedef struct {
 
 
 //SPI Modes
-#define SPI_DEVICE_MODE_MASTER
-#define SPI_DEVICE_MODE_SLAVE
+#define SPI_DEVICE_MODE_MASTER	1
+#define SPI_DEVICE_MODE_SLAVE	0
 
 //Bus Config
-#define SPI_BUS_CONFIG_FD //Full duplex
-#define SPI_BUS_CONFIG_HD //Half duplex
-#define SPI_BUS_CONFIG_S_TXONLY
-#define SPI_BUS_CONFIG_S_RXONLY
+#define SPI_BUS_CONFIG_FD		1 //Full duplex
+#define SPI_BUS_CONFIG_HD		2 //Half duplex
+#define SPI_BUS_CONFIG_SIMPLEX_TXONLY	3
+#define SPI_BUS_CONFIG_SIMPLEX_RXONLY	4
+
+//Sclk Speed baud control
+#define SPI_SCLK_SPEED_DIV2		0
+#define SPI_SCLK_SPEED_DIV4		1
+#define SPI_SCLK_SPEED_DIV8		2
+#define SPI_SCLK_SPEED_DIV16	3
+#define SPI_SCLK_SPEED_DIV32	4
+#define SPI_SCLK_SPEED_DIV64	5
+#define SPI_SCLK_SPEED_DIV128	6
+#define SPI_SCLK_SPEED_DIV256	7
+
+//SPI DFF
+#define SPI_DFF_8BITS	0
+#define SPI_DFF_16BITS	1
+
+//CPOL
+#define SPI_CPOL_HIGH	1
+#define SPI_CPOL_LOW	0
+
+//CPHA
+#define SPI_CPHA_HIGH	1
+#define SPI_CPHA_LOW	0
+
+//SSM
+#define SPI_SSM_HW 1
+#define SPI_SSM_SW 0
+
+
 
 
 // ******************APIs Supported by this driver***************************

@@ -24,5 +24,4 @@ C_DEPS :=
 SUBDIRS := \
 Src \
 Startup \
-Inc \
 
