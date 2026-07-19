@@ -36,6 +36,7 @@ typedef struct {
 #define SPI_DEVICE_MODE_MASTER	1
 #define SPI_DEVICE_MODE_SLAVE	0
 
+
 //Bus Config
 #define SPI_BUS_CONFIG_FD		1 //Full duplex
 #define SPI_BUS_CONFIG_HD		2 //Half duplex
@@ -68,6 +69,58 @@ typedef struct {
 #define SPI_SSM_HW 1
 #define SPI_SSM_SW 0
 
+/******************************************************************************/
+/*                                                                            */
+/*                      SPI Register Bit Positions                            */
+/*                                                                            */
+/******************************************************************************/
+
+/* Bit position definitions for SPI Control Register 1 (SPIx_CR1) */
+#define SPI_CR1_CPHA            0   /* Clock phase */
+#define SPI_CR1_CPOL            1   /* Clock polarity */
+#define SPI_CR1_MSTR            2   /* Master selection */
+#define SPI_CR1_BR              3   /* Baud rate control (Starts at Bit 3, occupies 3,4,5) */
+#define SPI_CR1_SPE             6   /* SPI peripheral enable */
+#define SPI_CR1_LSBFIRST        7   /* Frame format */
+#define SPI_CR1_SSI             8   /* Internal slave select */
+#define SPI_CR1_SSM             9   /* Software slave management */
+#define SPI_CR1_RXONLY          10  /* Receive only mode enabled */
+#define SPI_CR1_CRCL            11  /* CRC length */
+#define SPI_CR1_CRCNEXT         12  /* Transmit CRC next */
+#define SPI_CR1_CRCEN           13  /* Hardware CRC calculation enable */
+#define SPI_CR1_BIDIOE          14  /* Output enable in bidirectional mode */
+#define SPI_CR1_BIDIMODE        15  /* Bidirectional data mode enable */
+
+/* Bit position definitions for SPI Status Register (SPIx_SR) */
+#define SPI_SR_RXNE             0   /* Receive buffer not empty */
+#define SPI_SR_TXE              1   /* Transmit buffer empty */
+#define SPI_SR_CHSIDE           2   /* Channel side */
+#define SPI_SR_UDR              3   /* Underrun flag */
+#define SPI_SR_CRCERR           4   /* CRC error flag */
+#define SPI_SR_MODF             5   /* Mode fault */
+#define SPI_SR_OVR              6   /* Overrun flag */
+#define SPI_SR_BSY              7   /* Busy flag */
+#define SPI_SR_FRE              8   /* Frame format error */
+#define SPI_SR_FRLVL            9   /* FIFO reception level (Starts at Bit 9, occupies 9,10) */
+#define SPI_SR_FTLVL            11  /* FIFO transmission level (Starts at Bit 11, occupies 11,12) */
+
+
+/******************************************************************************/
+/*                                                                            */
+/*                      SPI Flag Status Bitmasks                              */
+/*                                                                            */
+/******************************************************************************/
+
+/* Handy bitmasks to pass into your SPI_GetFlagStatus API */
+#define SPI_RXNE_FLAG          (1 << SPI_SR_RXNE)
+#define SPI_TXE_FLAG           (1 << SPI_SR_TXE)
+#define SPI_CHSIDE_FLAG        (1 << SPI_SR_CHSIDE)
+#define SPI_UDR_FLAG           (1 << SPI_SR_UDR)
+#define SPI_CRCERR_FLAG        (1 << SPI_SR_CRCERR)
+#define SPI_MODF_FLAG          (1 << SPI_SR_MODF)
+#define SPI_OVR_FLAG           (1 << SPI_SR_OVR)
+#define SPI_BUSY_FLAG          (1 << SPI_SR_BSY)
+#define SPI_FRE_FLAG           (1 << SPI_SR_FRE)
 
 
 

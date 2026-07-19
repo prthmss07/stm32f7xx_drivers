@@ -811,7 +811,7 @@ LOAD C:/ST/STM32CubeIDE_2.1.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_rnglists
                 0x00000013       0x19 ./Startup/startup_stm32f722zetx.o
 
-.debug_macro    0x00000000     0x146e
+.debug_macro    0x00000000     0x153a
  .debug_macro   0x00000000       0x94 ./Src/Assign1.o
  .debug_macro   0x00000094      0xade ./Src/Assign1.o
  .debug_macro   0x00000b72       0x22 ./Src/Assign1.o
@@ -822,16 +822,16 @@ LOAD C:/ST/STM32CubeIDE_2.1.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_macro   0x00000de0      0x1df ./Src/Assign1.o
  .debug_macro   0x00000fbf      0x35d ./Src/Assign1.o
  .debug_macro   0x0000131c       0xc4 ./Src/Assign1.o
- .debug_macro   0x000013e0       0x8e ./Src/Assign1.o
+ .debug_macro   0x000013e0      0x15a ./Src/Assign1.o
 
 .debug_line     0x00000000      0x52e
  .debug_line    0x00000000      0x4b3 ./Src/Assign1.o
  .debug_line    0x000004b3       0x7b ./Startup/startup_stm32f722zetx.o
 
-.debug_str      0x00000000     0x5926
- .debug_str     0x00000000     0x5926 ./Src/Assign1.o
-                               0x5a53 (size before relaxing)
- .debug_str     0x00005926       0x88 ./Startup/startup_stm32f722zetx.o
+.debug_str      0x00000000     0x5bcd
+ .debug_str     0x00000000     0x5bcd ./Src/Assign1.o
+                               0x5cfa (size before relaxing)
+ .debug_str     0x00005bcd       0x88 ./Startup/startup_stm32f722zetx.o
 
 .comment        0x00000000       0x43
  .comment       0x00000000       0x43 ./Src/Assign1.o
