@@ -9,6 +9,10 @@
 #define STM32F7XX_H_
 
 #include<stdint.h>
+#include<stddef.h>
+
+#define __weak __attribute__((weak))
+
 
 /* ARM Cortx-M7 NVIC ISER Register Addresses*/
 
@@ -282,13 +286,19 @@ typedef struct
                                         (x == GPIOB)?5:\
                                         (x == GPIOA)?6:\
                                         (x == GPIOB)?7:0 )
-#define IQR_NO_EXTI0		6
-#define IQR_NO_EXTI1		7
-#define IQR_NO_EXTI2		8
-#define IQR_NO_EXTI3		9
-#define IQR_NO_EXTI4		10
-#define IQR_NO_EXTI9_5		23
-#define IQR_NO_EXTI15_10	40
+#define IRQ_NO_EXTI0		6
+#define IRQ_NO_EXTI1		7
+#define IRQ_NO_EXTI2		8
+#define IRQ_NO_EXTI3		9
+#define IRQ_NO_EXTI4		10
+#define IRQ_NO_EXTI9_5		23
+#define IRQ_NO_EXTI15_10	40
+
+#define IRQ_NO_SPI1		35
+#define IRQ_NO_SPI2		36
+#define IRQ_NO_SPI3		51
+#define IRQ_NO_SPI4		84
+#define IRQ_NO_SPI5		85
 
 #define SPI1	((SPI_RegDef_t*)SPI1_BASE_ADDRESS)
 #define SPI2	((SPI_RegDef_t*)SPI2_BASE_ADDRESS)

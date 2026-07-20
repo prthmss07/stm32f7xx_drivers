@@ -26,10 +26,35 @@ typedef struct {
                               // (Your code will also toggle the companion SSI bit at Bit 8 based on this)
 } SPI_Config_t;
 
-typedef struct {
-    SPI_RegDef_t   *pSPIx;       // Holds the base address of the peripheral (SPI1, SPI2, etc.)
-    SPI_Config_t  SPIConfig;    // Holds the user configurations from Slide 1
+typedef struct
+{
+    SPI_RegDef_t *pSPIx;      /*!< This holds the base address of SPIx(x:0,1,2) peripheral */
+    SPI_Config_t SPIConfig;
+
+    uint8_t  *pTxBuffer;      /*!< To store the app. Tx buffer address */
+    uint8_t  *pRxBuffer;      /*!< To store the app. Rx buffer address */
+
+    uint32_t TxLen;           /*!< To store Tx len */
+    uint32_t RxLen;           /*!< To store Rx len */
+
+    uint8_t  TxState;         /*!< To store Tx state */
+    uint8_t  RxState;         /*!< To store Rx state */
+
 } SPI_Handle_t;
+
+
+//SPI application states
+#define SPI_READY		0
+#define SPI_BUSY_IN_RX	1
+#define SPI_BUSY_IN_TX	2
+
+/*
+ * Possible SPI Application events
+ */
+#define SPI_EVENT_TX_CMPLT    1
+#define SPI_EVENT_RX_CMPLT    2
+#define SPI_EVENT_OVR_ERR     3
+#define SPI_EVENT_CRC_ERR     4
 
 
 //SPI Modes
@@ -85,11 +110,28 @@ typedef struct {
 #define SPI_CR1_SSI             8   /* Internal slave select */
 #define SPI_CR1_SSM             9   /* Software slave management */
 #define SPI_CR1_RXONLY          10  /* Receive only mode enabled */
-#define SPI_CR1_CRCL            11  /* CRC length */
+#define SPI_CR1_DFF	            11  /* CRC length */
 #define SPI_CR1_CRCNEXT         12  /* Transmit CRC next */
 #define SPI_CR1_CRCEN           13  /* Hardware CRC calculation enable */
 #define SPI_CR1_BIDIOE          14  /* Output enable in bidirectional mode */
 #define SPI_CR1_BIDIMODE        15  /* Bidirectional data mode enable */
+
+/* Bit position definitions for SPI Control Register 2 (SPIx_CR2) */
+#define SPI_CR2_RXDMAEN         0   /* Rx buffer DMA enable */
+#define SPI_CR2_TXDMAEN         1   /* Tx buffer DMA enable */
+#define SPI_CR2_SSOE            2   /* SS output enable */
+#define SPI_CR2_NSSP            3   /* NSS pulse management */
+#define SPI_CR2_FRF             4   /* Frame format */
+#define SPI_CR2_ERRIE           5   /* Error interrupt enable */
+#define SPI_CR2_RXNEIE          6   /* RX buffer not empty interrupt enable */
+#define SPI_CR2_TXEIE           7   /* Tx buffer empty interrupt enable */
+
+#define SPI_CR2_DS              8   /* Data size (Starts at Bit 8, occupies Bits 8-11) */
+
+#define SPI_CR2_FRXTH           12  /* FIFO reception threshold */
+#define SPI_CR2_LDMARX          13  /* Last DMA transfer for reception */
+#define SPI_CR2_LDMATX          14  /* Last DMA transfer for transmission */
+/* Bit 15 is Reserved */
 
 /* Bit position definitions for SPI Status Register (SPIx_SR) */
 #define SPI_SR_RXNE             0   /* Receive buffer not empty */
@@ -135,13 +177,22 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx);
 
 //Data send and receive
 void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t len );
-void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t len);
+void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t len);
+
+//Data send and receive interrupt based
+void SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer, uint32_t len );
+void SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer, uint32_t len);
 
 //IRQ Configuration and IRQ handling
 void SPI_IRQConfig(uint8_t IRQNumber, uint8_t EnorDi);
 void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority);
 void SPI_IRQHandler(SPI_Handle_t *pHandle);
+void SPI_ClearOVRFlag(SPI_RegDef_t *pSPIx);
+void SPI_CloseTransmission(SPI_Handle_t *pHandle);
+void SPI_CloseReception(SPI_Handle_t *pHandle);
 
+//application callback
+void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIHandle, uint8_t AppEv);
 
 //Other peripheral APIs
 
