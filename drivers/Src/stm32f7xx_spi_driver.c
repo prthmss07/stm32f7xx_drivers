@@ -474,7 +474,7 @@ static void spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle)
     }
 
     // ------------------ CLOSING THE TRANSMISSION TRANSACTION ------------------
-    void SPI_CloseTransmission(SPI_Handle_t *pHandle);
+    SPI_CloseTransmission(pSPIHandle);
     // Notify the application layer via asynchronous callback that transmission is complete
     SPI_ApplicationEventCallback(pSPIHandle, SPI_EVENT_TX_CMPLT);
 }
