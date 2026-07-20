@@ -328,9 +328,46 @@ uint8_t SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer, uint32_t
  * @param  EnorDi   : ENABLE or DISABLE control
  * @retval None
  */
-void SPI_IRQConfig(uint8_t IRQNumber, uint8_t EnorDi)
+void SPI_IRQConfig(uint8_t IRQNumber, uint8_t EnorDi) //this is just a generic function, nothing specific to SPI
 {
     // Implementation configures the ARM Cortex-M NVIC ISER/ICER registers
+	//Writing 1 to ISER enables the interrupt
+    if(EnorDi == ENABLE)
+    {
+        if(IRQNumber <= 31)
+        {
+            // program ISER0 register
+            *ISER0 |= (1 << IRQNumber);
+        }
+        else if(IRQNumber > 31 && IRQNumber < 64)
+        {
+            // program ISER1 register
+            *ISER1 |= (1 << (IRQNumber % 32));
+        }
+        else if(IRQNumber >= 64 && IRQNumber < 96)
+        {
+            // program ISER2 register
+            *ISER2 |= (1 << (IRQNumber % 32));
+        }
+    }
+    else
+    {
+        if(IRQNumber <= 31)
+        {
+            // program ICER0 register
+            *ICER0 |= (1 << IRQNumber);
+        }
+        else if(IRQNumber > 31 && IRQNumber < 64)
+        {
+            // program ICER1 register
+            *ICER1 |= (1 << (IRQNumber % 32));
+        }
+        else if(IRQNumber >= 64 && IRQNumber < 96)
+        {
+            // program ICER2 register
+            *ICER2 |= (1 << (IRQNumber % 32));
+        }
+    }
 }
 
 /**
@@ -342,6 +379,18 @@ void SPI_IRQConfig(uint8_t IRQNumber, uint8_t EnorDi)
 void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority)
 {
     // Implementation configures the ARM Cortex-M NVIC IPR registers
+    uint32_t iprx = IRQNumber / 4;
+    uint32_t iprx_section = IRQNumber % 4;
+
+    // 1. Shift the priority to the top of an 8-bit block (e.g., if 4 bits implemented, shift by 4)
+    uint8_t aligned_priority = (IRQPriority << (8 - NO_PR_BITS_IMPLEMENTED));
+
+    // 2. Shift that aligned 8-bit block to the correct section (0, 8, 16, or 24 bits)
+    uint8_t shift_amount = (8 * iprx_section);
+
+    // 3. Clear the old priority bits first to prevent overlapping data, then set new ones
+    *(NVIC_PR_BASE_ADDRESS + iprx) &= ~(0xFF << shift_amount);
+    *(NVIC_PR_BASE_ADDRESS + iprx) |= (aligned_priority << shift_amount);
 }
 
 /**
