@@ -44,6 +44,9 @@ typedef struct
 
 
 //SPI application states
+#define FLAG_SET	1
+#define FLAG_RESET	0
+
 #define SPI_READY		0
 #define SPI_BUSY_IN_RX	1
 #define SPI_BUSY_IN_TX	2
@@ -180,8 +183,8 @@ void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t len );
 void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t len);
 
 //Data send and receive interrupt based
-void SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer, uint32_t len );
-void SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer, uint32_t len);
+uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer, uint32_t len );
+uint8_t SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer, uint32_t len);
 
 //IRQ Configuration and IRQ handling
 void SPI_IRQConfig(uint8_t IRQNumber, uint8_t EnorDi);

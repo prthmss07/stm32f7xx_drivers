@@ -55,8 +55,8 @@ typedef struct {
 #define GPIO_MODE_IT_RFT	6 //Rising edge falling edge
 
 //GPIO possible output types
-#define GPIO_OP_TYPE_PP //push-pull
-#define GPIO_OP_TYPE_OD //open drain
+#define GPIO_OP_TYPE_PP 0 //push-pull
+#define GPIO_OP_TYPE_OD 1 //open drain
 
 //GPIO possible speeds
 #define GPIO_SPEED_LOW			0
@@ -80,14 +80,14 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIOx);
 
 //data read and write
 uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
-uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx);
+uint8_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
 void GPIO_WriteToOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t Value);
 void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value); //uint16_t because there are 16 pins in a port
 void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
 
 //IRQ configuration and ISR handling
 void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t EnorDi);
-void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority);
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
 void GPIO_IRQHandler(uint8_t PinNumber);
 
 #endif /* STM32F7XX_GPIO_DRIVER_H_ */

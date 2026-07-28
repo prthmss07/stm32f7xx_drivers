@@ -8,6 +8,8 @@
 #include "stm32f7xx_spi_driver.h"
 #include "stm32f7xx.h"
 static void spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle);
+static void spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle);
+static void spi_ovr_err_interrupt_handle(SPI_Handle_t *pSPIHandle);
 
 /**
  * @brief  Enables or disables the peripheral clock for the given SPI instance.
@@ -337,17 +339,17 @@ void SPI_IRQConfig(uint8_t IRQNumber, uint8_t EnorDi) //this is just a generic f
         if(IRQNumber <= 31)
         {
             // program ISER0 register
-            *ISER0 |= (1 << IRQNumber);
+            *NVIC_ISER0 |= (1 << IRQNumber);
         }
         else if(IRQNumber > 31 && IRQNumber < 64)
         {
             // program ISER1 register
-            *ISER1 |= (1 << (IRQNumber % 32));
+            *NVIC_ISER1 |= (1 << (IRQNumber % 32));
         }
         else if(IRQNumber >= 64 && IRQNumber < 96)
         {
             // program ISER2 register
-            *ISER2 |= (1 << (IRQNumber % 32));
+            *NVIC_ISER2 |= (1 << (IRQNumber % 32));
         }
     }
     else
@@ -355,17 +357,17 @@ void SPI_IRQConfig(uint8_t IRQNumber, uint8_t EnorDi) //this is just a generic f
         if(IRQNumber <= 31)
         {
             // program ICER0 register
-            *ICER0 |= (1 << IRQNumber);
+            *NVIC_ICER0 |= (1 << IRQNumber);
         }
         else if(IRQNumber > 31 && IRQNumber < 64)
         {
             // program ICER1 register
-            *ICER1 |= (1 << (IRQNumber % 32));
+            *NVIC_ICER1 |= (1 << (IRQNumber % 32));
         }
         else if(IRQNumber >= 64 && IRQNumber < 96)
         {
             // program ICER2 register
-            *ICER2 |= (1 << (IRQNumber % 32));
+            *NVIC_ICER2 |= (1 << (IRQNumber % 32));
         }
     }
 }
@@ -397,6 +399,15 @@ void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority)
  * @brief  Centralized Interrupt Service Routine (ISR) Handler for SPI peripherals.
  * @note   Evaluates both the Status Register flags (event occurred) AND Control Register bits
  *         (interrupt enabled) to identify what caused the interrupt and pass the execution to dedicated sub-handlers.
+ *         - Application Layer Responsibility:
+ *            This driver function is NOT called directly by hardware. The application
+ *            layer (typically in stm32f7xx_it.c) must override the startup file's
+ *            [WEAK] vector symbol (e.g., 'SPI1_IRQHandler') and call this function from
+ *            within it, passing the peripheral handle e.g., if we consider for lets say SPI1:
+ *            void SPI1_IRQHandler(void)
+ *            {
+ *            	SPI_IRQHandler(&hspi1);
+ *            }
  * @param  pHandle: Pointer to the SPI Handle structure
  * @retval None
  */
@@ -539,21 +550,19 @@ static void spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle)
  */
 static void spi_ovr_err_interrupt_handle(SPI_Handle_t *pSPIHandle)
 {
-    uint8_t temp;
-
-    // 1. Clear the hardware Overrun (OVR) flag.
-    //    Per the hardware reference manual, reading DR followed by SR clears OVR.
     if (pSPIHandle->TxState != SPI_BUSY_IN_TX)
     {
-        temp = pSPIHandle->pSPIx->DR;
-        temp = pSPIHandle->pSPIx->SR;
+        SPI_ClearOVRFlag(pSPIHandle->pSPIx);
     }
-
-    // Silences compiler warnings regarding the unused 'temp' variable
-    (void)temp;
-
-    // 2. Notify the application layer that an Overrun Error occurred
     SPI_ApplicationEventCallback(pSPIHandle, SPI_EVENT_OVR_ERR);
+}
+
+void SPI_ClearOVRFlag(SPI_RegDef_t *pSPIx)
+{
+    uint8_t temp;
+    temp = pSPIx->DR;
+    temp = pSPIx->SR;
+    (void)temp;
 }
 
 /**

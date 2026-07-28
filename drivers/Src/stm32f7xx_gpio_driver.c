@@ -123,7 +123,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 		 * and as OR operation has no power to manipulate and flit a 1 bit to 0, it can only either keep 0 as 0 or change 0 to 1,
 		 * so we need to make sure the bits are 00, only then we can manipulate both bits using OR.
   	     */
-		pGPIOHandle->pGPIOx->MODER &= ~(0x3 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // clearing
+		pGPIOHandle->pGPIOx->MODER &= ~(0x3 << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber)); // clearing
 		pGPIOHandle->pGPIOx->MODER |= temp; //setting
 	}
 	else
@@ -172,14 +172,14 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 	 *  which eventually means (3 << (2 * 8)) means 3 << 16 (shift the binary value 11 by 16 positions).
 	 */
 	temp = (pGPIOHandle->GPIO_PinConfig.GPIO_PinSpeed << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
-	pGPIOHandle->pGPIOx->OSPEEDR &= ~(0x3 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // clearing
+	pGPIOHandle->pGPIOx->OSPEEDR &= ~(0x3 << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber)); // clearing
 	pGPIOHandle->pGPIOx->OSPEEDR |= temp; //setting
 
 	temp = 0;
 
 	//3. Configure PUPD  settings
 	temp = (pGPIOHandle->GPIO_PinConfig.GPIO_PinPuPdControl << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
-	pGPIOHandle->pGPIOx->PUPDR &= ~(0x3 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // clearing
+	pGPIOHandle->pGPIOx->PUPDR &= ~(0x3 << (2 * pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber)); // clearing
 	pGPIOHandle->pGPIOx->PUPDR |= temp; //setting
 
 	//4. Configure OP TYPE
@@ -188,7 +188,7 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 	pGPIOHandle->pGPIOx->OTYPER |= temp;
 
 	//5. ALT FUNC
-	if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIOGPIO_MODE_ALTFN)
+	if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_ALTFN)
 	{
 		uint8_t temp1, temp2;
 		temp1 = pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber/8;
@@ -251,7 +251,8 @@ uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 uint8_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 {
 	uint8_t value;
-	value = (uint8_t)pGPIOx->IDR; //shifting the number of times Pin number is to bring the desired pin number value at the 0th position and then do AND operation to mask it and get only that value
+	(void)PinNumber;
+	value = (uint8_t)pGPIOx->IDR;
 	return value;
 }
 
@@ -292,17 +293,17 @@ void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t EnorDi)
         if(IRQNumber <= 31)
         {
             // program ISER0 register
-            *ISER0 |= (1 << IRQNumber);
+            *NVIC_ISER0 |= (1 << IRQNumber);
         }
         else if(IRQNumber > 31 && IRQNumber < 64)
         {
             // program ISER1 register
-            *ISER1 |= (1 << (IRQNumber % 32));
+            *NVIC_ISER1 |= (1 << (IRQNumber % 32));
         }
         else if(IRQNumber >= 64 && IRQNumber < 96)
         {
             // program ISER2 register
-            *ISER2 |= (1 << (IRQNumber % 32));
+            *NVIC_ISER2 |= (1 << (IRQNumber % 32));
         }
     }
     else
@@ -310,22 +311,22 @@ void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t EnorDi)
         if(IRQNumber <= 31)
         {
             // program ICER0 register
-            *ICER0 |= (1 << IRQNumber);
+            *NVIC_ICER0 |= (1 << IRQNumber);
         }
         else if(IRQNumber > 31 && IRQNumber < 64)
         {
             // program ICER1 register
-            *ICER1 |= (1 << (IRQNumber % 32));
+            *NVIC_ICER1 |= (1 << (IRQNumber % 32));
         }
         else if(IRQNumber >= 64 && IRQNumber < 96)
         {
             // program ICER2 register
-            *ICER2 |= (1 << (IRQNumber % 32));
+            *NVIC_ICER2 |= (1 << (IRQNumber % 32));
         }
     }
 }
 
-void NVIC_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority)
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority)
 {
     uint32_t iprx = IRQNumber / 4;
     uint32_t iprx_section = IRQNumber % 4;

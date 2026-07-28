@@ -275,17 +275,18 @@ typedef struct
 #define SPI1_REG_RESET()		do{ (RCC->APB2RSTR |= (1 << 12));	(RCC->APB2RSTR &= ~(1 << 12)); }while(0)
 #define SPI2_REG_RESET()		do{ (RCC->APB1RSTR |= (1 << 14));	(RCC->APB1RSTR &= ~(1 << 14)); }while(0)
 #define SPI3_REG_RESET()		do{ (RCC->APB1RSTR |= (1 << 15));	(RCC->APB1RSTR &= ~(1 << 15)); }while(0)
-#define SPI4_REG_RESET()		do{ (RCC->AHB2RSTR |= (1 << 13));	(RCC->AHB1RSTR &= ~(1 << 13)); }while(0)
+#define SPI4_REG_RESET()		do{ (RCC->APB2RSTR |= (1 << 13));	(RCC->APB2RSTR &= ~(1 << 13)); }while(0)
 
 
 #define GPIO_BASE_ADDRESS_TO_CODE(x)    ((x == GPIOA)?0:\
                                         (x == GPIOB)?1:\
                                         (x == GPIOC)?2:\
-                                        (x == GPIOB)?3:\
-                                        (x == GPIOA)?4:\
-                                        (x == GPIOB)?5:\
-                                        (x == GPIOA)?6:\
-                                        (x == GPIOB)?7:0 )
+                                        (x == GPIOD)?3:\
+                                        (x == GPIOE)?4:\
+                                        (x == GPIOF)?5:\
+                                        (x == GPIOG)?6:\
+                                        (x == GPIOH)?7:\
+                                        (x == GPIOI)?8:0 )
 #define IRQ_NO_EXTI0		6
 #define IRQ_NO_EXTI1		7
 #define IRQ_NO_EXTI2		8
