@@ -94,6 +94,30 @@
 #define SPI4_BASE_ADDRESS		(APB2_PERIPHERAL_BASE + 0x3400)
 #define SPI5_BASE_ADDRESS		(APB2_PERIPHERAL_BASE + 0x5000)
 
+/* Base addresses of DMA Peripheral Controllers on AHB1 Bus */
+#define DMA1_BASE             (AHB1_PERIPHERAL_BASE + 0x6000UL)  // 0x40026000
+#define DMA2_BASE             (AHB1_PERIPHERAL_BASE + 0x6400UL)  // 0x40026400
+
+/* DMA1 Stream Base Addresses */
+#define DMA1_STREAM0_BASE     (DMA1_BASE + 0x010UL)
+#define DMA1_STREAM1_BASE     (DMA1_BASE + 0x028UL)
+#define DMA1_STREAM2_BASE     (DMA1_BASE + 0x040UL)
+#define DMA1_STREAM3_BASE     (DMA1_BASE + 0x058UL)
+#define DMA1_STREAM4_BASE     (DMA1_BASE + 0x070UL)
+#define DMA1_STREAM5_BASE     (DMA1_BASE + 0x088UL)
+#define DMA1_STREAM6_BASE     (DMA1_BASE + 0x0A0UL)
+#define DMA1_STREAM7_BASE     (DMA1_BASE + 0x0B8UL)
+
+/* DMA2 Stream Base Addresses */
+#define DMA2_STREAM0_BASE     (DMA2_BASE + 0x010UL)
+#define DMA2_STREAM1_BASE     (DMA2_BASE + 0x028UL)
+#define DMA2_STREAM2_BASE     (DMA2_BASE + 0x040UL)
+#define DMA2_STREAM3_BASE     (DMA2_BASE + 0x058UL)
+#define DMA2_STREAM4_BASE     (DMA2_BASE + 0x070UL)
+#define DMA2_STREAM5_BASE     (DMA2_BASE + 0x088UL)
+#define DMA2_STREAM6_BASE     (DMA2_BASE + 0x0A0UL)
+#define DMA2_STREAM7_BASE     (DMA2_BASE + 0x0B8UL)
+
 /***************************peripheral registers definition structure***********************/
 
 /* first starting with all the registers used by the GPIO peripheral */
@@ -185,6 +209,28 @@ typedef struct
 
 }SYSCFG_RegDef_t;
 
+/**
+ * @brief DMA Controller Global Status & Clear Registers Map
+ */
+typedef struct {
+	volatile uint32_t LISR;   /* Offset: 0x00 - Low Interrupt Status Register          */
+	volatile uint32_t HISR;   /* Offset: 0x04 - High Interrupt Status Register         */
+	volatile uint32_t LIFCR;  /* Offset: 0x08 - Low Interrupt Flag Clear Register     */
+	volatile uint32_t HIFCR;  /* Offset: 0x0C - High Interrupt Flag Clear Register    */
+} DMA_RegDef_t;
+
+/**
+ * @brief DMA Stream-Specific Registers Map
+ */
+typedef struct {
+	volatile uint32_t CR;     /* Offset: 0x00 - Stream x Configuration Register        */
+	volatile uint32_t NDTR;   /* Offset: 0x04 - Stream x Number of Data Register       */
+	volatile uint32_t PAR;    /* Offset: 0x08 - Stream x Peripheral Address Register   */
+	volatile uint32_t M0AR;   /* Offset: 0x0C - Stream x Memory 0 Address Register    */
+	volatile uint32_t M1AR;   /* Offset: 0x10 - Stream x Memory 1 Address Register    */
+	volatile uint32_t FCR;    /* Offset: 0x14 - Stream x FIFO Control Register         */
+} DMA_Stream_RegDef_t;
+
 /******** Peripheral base addresses type-casted to xxx_RegDef_t *************/
 #define GPIOA ((GPIO_RegDef_t*)GPIOA_BASE_ADDRESS)
 #define GPIOB ((GPIO_RegDef_t*)GPIOB_BASE_ADDRESS)
@@ -233,6 +279,14 @@ typedef struct
 
 //Clock enable macro for SYSCFG peripheral
 #define SYSCFG_PCLK_EN()		RCC->APB2ENR |= (1 << 14)
+
+/* Clock Enable Macros for DMAx Peripherals */
+#define DMA1_PCLK_EN()        RCC->AHB1ENR |= (1 << 21)  // Bit 21 in AHB1ENR enables DMA1
+#define DMA2_PCLK_EN()        RCC->AHB1ENR |= (1 << 22)  // Bit 22 in AHB1ENR enables DMA2
+
+/* Clock Disable Macros for DMAx Peripherals */
+#define DMA1_PCLK_DIS()       RCC->AHB1ENR &= ~(1 << 21)
+#define DMA2_PCLK_DIS()       RCC->AHB1ENR &= ~(1 << 22)
 
 //Clock disabling macro for GPIOx peripheral
 #define GPIOA_PERI_CLK_DI()		RCC->AHB1ENR &= ~(1 << 0)
@@ -319,7 +373,43 @@ typedef struct
 #define GPIO_PIN_SET SET
 #define GPIO_PIN_RESET RESET
 
+/* .**************************DMA Controller******************************. */
 
+/* Bit position definitions for DMA_SxCR */
+#define DMA_SxCR_EN           0    /* Bit 0  */
+#define DMA_SxCR_DMEIE        1    /* Bit 1  */
+#define DMA_SxCR_TEIE         2    /* Bit 2  */
+#define DMA_SxCR_HTIE         3    /* Bit 3  */
+#define DMA_SxCR_TCIE         4    /* Bit 4  */
+#define DMA_SxCR_PFCTRL       5    /* Bit 5  */
+#define DMA_SxCR_DIR          6    /* Bit 6  */
+#define DMA_SxCR_CIRC         8    /* Bit 8  */
+#define DMA_SxCR_PINC         9    /* Bit 9  */
+#define DMA_SxCR_MINC         10   /* Bit 10 */
+#define DMA_SxCR_PSIZE        11   /* Bit 11 */
+#define DMA_SxCR_MSIZE        13   /* Bit 13 */
+#define DMA_SxCR_PL           16   /* Bit 16 */
+#define DMA_SxCR_DBM          18   /* Bit 18 */
+#define DMA_SxCR_CHSEL        25   /* Bit 25 */
+
+/* Bit position definitions for DMA_SxFCR */
+#define DMA_SxFCR_FTH         0    /* Bit 0 */
+#define DMA_SxFCR_DMDIS       2    /* Bit 2 */
+#define DMA_SxFCR_FS          3    /* Bit 3 */
+#define DMA_SxFCR_FEIE        7    /* Bit 7 */
+
+/* Bit position definitions for Stream 0 flags in LISR / LIFCR */
+#define DMA_LISR_FEIF0        0    /* Bit 0 */
+#define DMA_LISR_DMEIF0       2    /* Bit 2 */
+#define DMA_LISR_TEIF0        3    /* Bit 3 */
+#define DMA_LISR_HTIF0        4    /* Bit 4 */
+#define DMA_LISR_TCIF0        5    /* Bit 5 */
+
+#define DMA_LIFCR_CFEIF0      0    /* Bit 0 */
+#define DMA_LIFCR_CDMEIF0     2    /* Bit 2 */
+#define DMA_LIFCR_CTEIF0      3    /* Bit 3 */
+#define DMA_LIFCR_CHTIF0      4    /* Bit 4 */
+#define DMA_LIFCR_CTCIF0      5    /* Bit 5 */
 
 #include "stm32f7xx_gpio_driver.h"
 #include "stm32f7xx_spi_driver.h"
