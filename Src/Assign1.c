@@ -15,8 +15,7 @@ int main(void){
 	gpioled.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_12;
 	gpioled.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUT;
 	gpioled.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_HIGH;
-	gpioled.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP
-	gpioled.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
+	gpioled.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
 
 
 

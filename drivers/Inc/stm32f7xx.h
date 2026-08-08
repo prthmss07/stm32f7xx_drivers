@@ -285,8 +285,8 @@ typedef struct {
 #define DMA2_PCLK_EN()        RCC->AHB1ENR |= (1 << 22)  // Bit 22 in AHB1ENR enables DMA2
 
 /* Clock Disable Macros for DMAx Peripherals */
-#define DMA1_PCLK_DIS()       RCC->AHB1ENR &= ~(1 << 21)
-#define DMA2_PCLK_DIS()       RCC->AHB1ENR &= ~(1 << 22)
+#define DMA1_PCLK_DI()       RCC->AHB1ENR &= ~(1 << 21)
+#define DMA2_PCLK_DI()       RCC->AHB1ENR &= ~(1 << 22)
 
 //Clock disabling macro for GPIOx peripheral
 #define GPIOA_PERI_CLK_DI()		RCC->AHB1ENR &= ~(1 << 0)
@@ -410,6 +410,9 @@ typedef struct {
 #define DMA_LIFCR_CTEIF0      3    /* Bit 3 */
 #define DMA_LIFCR_CHTIF0      4    /* Bit 4 */
 #define DMA_LIFCR_CTCIF0      5    /* Bit 5 */
+
+#define DMA1	((DMA_RegDef_t*)DMA1_BASE)
+#define DMA2	((DMA_RegDef_t*)DMA2_BASE)
 
 #include "stm32f7xx_gpio_driver.h"
 #include "stm32f7xx_spi_driver.h"

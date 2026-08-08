@@ -44,7 +44,7 @@ typedef struct {
 /*
  * DMA Handle Structure
  */
-typedef struct __DMA_Handle_t {
+typedef struct {
     DMA_RegDef_t        *pDMAx;         // Pointer to base register: DMA1 or DMA2
     DMA_Stream_RegDef_t *pStream;       // Pointer to specific stream: DMA2_Stream0
     DMA_Config_t        DMA_Config;     // Configuration parameters
@@ -125,7 +125,7 @@ typedef struct __DMA_Handle_t {
  * @param  pDMAx: Base address of the DMA controller (DMA1 or DMA2).
  * @param  EnOrDis: ENABLE or DISABLE macro.
  */
-void DMA_PeriClockControl(DMA_RegDef_t *pDMAx, uint8_t EnOrDis);
+void DMA_PeriClockControl(DMA_RegDef_t *pDMAx, uint8_t EnorDi);
 
 /**
  * @brief  Initializes a DMA Stream based on the settings in DMA_Handle_t.
